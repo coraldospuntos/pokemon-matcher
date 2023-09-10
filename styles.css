@@ -3,8 +3,10 @@
 body {
     background-color: #f0f0f0;
     font-family: monospace;
+    max-width: 80vw; /* Limit to 80% of the viewport width */
+    margin: 20px 10px; /*Top and bottom margins 20px, left and right 10 px */
 }
 
 h1 {
-    color: blue;
+    color: rgb(130, 30, 55);
 }
