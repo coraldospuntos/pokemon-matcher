@@ -1,5 +1,5 @@
 // Define Pokémon and Poké Ball image URLs
-const imageBasePath = 'images/'; // Base path for image folders
+const imageBasePath = 'images/';
 const pokemonImages = {
     normal: {
         bulbasaur: 'mon/bulbasaur.png',
@@ -16,44 +16,39 @@ const pokeballImages = {
     // Add more Poké Ball images here
 };
 
-// Function to populate the datalist options
-function populateDatalist(data, datalistId) {
-    const datalist = document.getElementById(datalistId);
-    datalist.innerHTML = ''; // Clear previous options
-    data.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.display;
-        datalist.appendChild(option);
+// Function to load data from CSV files
+async function loadCsvData(filename) {
+    const response = await fetch(`data/${filename}`);
+    const data = await response.text();
+    return data.split('\n').map(line => {
+        const [display, value] = line.split(',');
+        return { display, value };
     });
 }
 
-// Function to load data from JSON files
-function loadJsonData() {
-    // Load Pokémon data
-    fetch('data/mon-data.csv')
-        .then(response => response.text())
-        .then(data => {
-            const pokemonData = data.split('\n').map(line => {
-                const [display, value] = line.split(',');
-                return { display, value };
-            });
-            populateDatalist(pokemonData, 'pokemon-options');
-        });
+// Function to populate the datalist options
+async function populateDatalists() {
+    const pokemonData = await loadCsvData('mon-data.csv');
+    const pokeballData = await loadCsvData('ball-data.csv');
+    
+    const pokemonDatalist = document.getElementById('pokemon-options');
+    const pokeballDatalist = document.getElementById('pokeball-options');
 
-    // Load Poké Ball data
-    fetch('data/ball-data.csv')
-        .then(response => response.text())
-        .then(data => {
-            const pokeballData = data.split('\n').map(line => {
-                const [display, value] = line.split(',');
-                return { display, value };
-            });
-            populateDatalist(pokeballData, 'pokeball-options');
-        });
+    pokemonData.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.display;
+        pokemonDatalist.appendChild(option);
+    });
+
+    pokeballData.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.display;
+        pokeballDatalist.appendChild(option);
+    });
 }
 
-// Call the function to load data when the page loads
-loadJsonData();
+// Call the function to populate datalists when the page loads
+populateDatalists();
 
 // Function to display selected images
 function displayImages() {
@@ -62,25 +57,24 @@ function displayImages() {
     const shinyToggle = document.getElementById('shiny-toggle');
     const mode = shinyToggle.checked ? 'shiny' : 'normal';
 
-    // Find the corresponding variable names
-    const selectedPokemon = pokemonData.find(item => item.display === selectedPokemonDisplay)?.value;
-    const selectedPokeball = pokeballData.find(item => item.display === selectedPokeballDisplay)?.value;
+    const selectedPokemon = selectedPokemonDisplay.toLowerCase().replace(' ', '-');
+    const selectedPokeball = selectedPokeballDisplay.toLowerCase().replace(' ', '-');
 
     const pokemonImage = document.getElementById('pokemon-image');
     const pokeballImage = document.getElementById('pokeball-image');
 
-    if (selectedPokemon && pokemonImages[mode][selectedPokemon]) {
+    if (pokemonImages[mode][selectedPokemon]) {
         pokemonImage.src = imageBasePath + pokemonImages[mode][selectedPokemon];
-        pokemonImage.style.display = 'block'; // Show the image
+        pokemonImage.style.display = 'block';
     } else {
-        pokemonImage.style.display = 'none'; // Hide the image
+        pokemonImage.style.display = 'none';
     }
 
-    if (selectedPokeball && pokeballImages[selectedPokeball]) {
+    if (pokeballImages[selectedPokeball]) {
         pokeballImage.src = imageBasePath + pokeballImages[selectedPokeball];
-        pokeballImage.style.display = 'block'; // Show the image
+        pokeballImage.style.display = 'block';
     } else {
-        pokeballImage.style.display = 'none'; // Hide the image
+        pokeballImage.style.display = 'none';
     }
 }
 
