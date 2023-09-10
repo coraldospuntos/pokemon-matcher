@@ -1,92 +1,64 @@
-// Define Pokémon and Poké Ball image URLs
-const imageBasePath = 'images/';
-const pokemonImages = {
-    normal: {
-        // Update image paths for normal Pokémon
-    },
-    shiny: {
-        // Update image paths for shiny Pokémon
-    },
-};
-
-const pokeballImages = {
-    // Update image paths for Poké Balls
-};
-
 // Function to load data from CSV files
-async function loadCsvData(filename) {
-    const response = await fetch(`data/${filename}`);
-    const text = await response.text();
-    const data = text.split('\n').map(row => row.split(','));
-    const headers = data[0];
-
-    const jsonData = data.slice(1).map(row => {
-        const item = {};
-        headers.forEach((header, index) => {
-            item[header] = row[index].trim();
+function loadCsvData() {
+    // Load Pokémon data
+    fetch('data/mon-data.csv')
+        .then(response => response.text())
+        .then(data => {
+            // Split CSV rows and create an array of objects
+            const rows = data.split('\n');
+            const pokemonData = rows.slice(1).map(row => {
+                const [displayName, fileName] = row.split(';');
+                return { display: displayName, value: fileName };
+            });
+            populateDatalist(pokemonData, 'mon-options');
         });
-        return item;
-    });
 
-    return jsonData;
+    // Load Poké Ball data
+    fetch('data/ball-data.csv')
+        .then(response => response.text())
+        .then(data => {
+            // Split CSV rows and create an array of objects
+            const rows = data.split('\n');
+            const pokeballData = rows.slice(1).map(row => {
+                const [displayName, fileName] = row.split(';');
+                return { display: displayName, value: fileName };
+            });
+            populateDatalist(pokeballData, 'ball-options');
+        });
 }
 
-// Function to populate the datalist options
-async function populateDatalists() {
-    const pokemonData = await loadCsvData('mon-data.csv');
-    const pokeballData = await loadCsvData('ball-data.csv');
+// Call the function to load data when the page loads
+loadCsvData();
 
-    const pokemonDatalist = document.getElementById('pokemon-options');
-    const pokeballDatalist = document.getElementById('pokeball-options');
-
-    pokemonData.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item['Pokémon'];
-        pokemonDatalist.appendChild(option);
-    });
-
-    pokeballData.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item['Poké Balls'];
-        pokeballDatalist.appendChild(option);
-    });
-}
-
-// Call the function to populate datalists when the page loads
-populateDatalists();
+// Event listener for automatic refresh
+document.getElementById('mon-input').addEventListener('input', displayImages);
+document.getElementById('ball-input').addEventListener('input', displayImages);
 
 // Function to display selected images
 function displayImages() {
-    const selectedPokemonDisplay = document.getElementById('pokemon-input').value;
-    const selectedPokeballDisplay = document.getElementById('pokeball-input').value;
-    const shinyToggle = document.getElementById('shiny-toggle');
-    const mode = shinyToggle.checked ? 'shiny' : 'normal';
+    const selectedPokemonDisplay = document.getElementById('mon-input').value;
+    const selectedPokeballDisplay = document.getElementById('ball-input').value;
 
-    const selectedPokemon = selectedPokemonDisplay.toLowerCase().replace(' ', '-');
-    const selectedPokeball = selectedPokeballDisplay.toLowerCase().replace(' ', '-');
+    // Convert selected values to lowercase
+    const selectedPokemon = selectedPokemonDisplay.toLowerCase();
+    const selectedPokeball = selectedPokeballDisplay.toLowerCase();
 
     const pokemonImage = document.getElementById('pokemon-image');
     const pokeballImage = document.getElementById('pokeball-image');
 
-    if (pokemonImages[mode][selectedPokemon]) {
-        pokemonImage.src = imageBasePath + pokemonImages[mode][selectedPokemon];
-        pokemonImage.style.display = 'block';
+    if (selectedPokemon && pokemonImages[selectedPokemon]) {
+        // Construct image path based on the selected value
+        pokemonImage.src = `images/mon/${pokemonImages[selectedPokemon]}.png`;
+        pokemonImage.style.display = 'block'; // Show the image
     } else {
-        pokemonImage.style.display = 'none';
+        pokemonImage.style.display = 'none'; // Hide the image
     }
 
-    if (pokeballImages[selectedPokeball]) {
-        pokeballImage.src = imageBasePath + pokeballImages[selectedPokeball];
-        pokeballImage.style.display = 'block';
+    if (selectedPokeball && pokeballImages[selectedPokeball]) {
+        // Construct image path based on the selected value
+        pokeballImage.src = `images/ball/${pokeballImages[selectedPokeball]}.png`;
+        pokeballImage.style.display = 'block'; // Show the image
     } else {
-        pokeballImage.style.display = 'none';
+        pokeballImage.style.display = 'none'; // Hide the image
     }
 }
-
-// Event listeners for automatic refresh
-document.getElementById('pokemon-input').addEventListener('input', displayImages);
-document.getElementById('pokeball-input').addEventListener('input', displayImages);
-document.getElementById('shiny-toggle').addEventListener('change', displayImages);
-
-// Initial image display
-displayImages();
