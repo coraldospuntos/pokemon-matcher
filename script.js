@@ -2,47 +2,52 @@
 const imageBasePath = 'images/';
 const pokemonImages = {
     normal: {
-        bulbasaur: 'mon/bulbasaur.png',
-        // Add more normal Pokémon images here
+        // Update image paths for normal Pokémon
     },
     shiny: {
-        bulbasaur: 'mon-shiny/bulbasaur.png',
-        // Add more shiny Pokémon images here
+        // Update image paths for shiny Pokémon
     },
 };
 
 const pokeballImages = {
-    poke: 'ball/poke.png',
-    // Add more Poké Ball images here
+    // Update image paths for Poké Balls
 };
 
 // Function to load data from CSV files
 async function loadCsvData(filename) {
     const response = await fetch(`data/${filename}`);
-    const data = await response.text();
-    return data.split('\n').map(line => {
-        const [display, value] = line.split(',');
-        return { display, value };
+    const text = await response.text();
+    const data = text.split('\n').map(row => row.split(','));
+    const headers = data[0];
+
+    const jsonData = data.slice(1).map(row => {
+        const item = {};
+        headers.forEach((header, index) => {
+            item[header] = row[index].trim();
+        });
+        return item;
     });
+
+    return jsonData;
 }
 
 // Function to populate the datalist options
 async function populateDatalists() {
     const pokemonData = await loadCsvData('mon-data.csv');
     const pokeballData = await loadCsvData('ball-data.csv');
-    
+
     const pokemonDatalist = document.getElementById('pokemon-options');
     const pokeballDatalist = document.getElementById('pokeball-options');
 
     pokemonData.forEach(item => {
         const option = document.createElement("option");
-        option.value = item.display;
+        option.value = item['Pokémon'];
         pokemonDatalist.appendChild(option);
     });
 
     pokeballData.forEach(item => {
         const option = document.createElement("option");
-        option.value = item.display;
+        option.value = item['Poké Balls'];
         pokeballDatalist.appendChild(option);
     });
 }
