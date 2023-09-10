@@ -1,9 +1,10 @@
-<style>
-    body {
-        background-color: #f0f0f0;
-        font-family: monospace;
-    }
-    h1 {
-        color: blue;
-    }
-</style>
+/* This is a comment */
+
+body {
+    background-color: #f0f0f0;
+    font-family: monospace;
+}
+
+h1 {
+    color: blue;
+}
