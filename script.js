@@ -1,3 +1,9 @@
+// Wrap your JavaScript code in this event listener
+document.addEventListener('DOMContentLoaded', function () {
+    // Your JavaScript code goes here
+    const pokemonInput = document.getElementById('mon-input');
+    const ballInput = document.getElementById('ball-input');
+
 // Function to load CSV data
 function loadCsvData() {
     d3.csv('data/mon-data.csv').then(function(pokemonData) {
@@ -28,8 +34,9 @@ function displayImages() {
 }
 
 // Event listener for automatic refresh
-document.getElementById('mon-input').addEventListener('input', displayImages);
-document.getElementById('ball-input').addEventListener('input', displayImages);
+pokemonInput.addEventListener('input', displayImages);
+ballInput.addEventListener('input', displayImages);
 
 // Initial image display
 displayImages();
+});
