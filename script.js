@@ -1,63 +1,53 @@
-// Function to fetch and display Pokémon data
-function fetchPokemonData() {
-    fetch('data/mon-data.csv') // Adjust the path to your CSV file
-        .then(response => response.text())
-        .then(data => {
-            const parsedData = Papa.parse(data, { header: true }).data;
-            const pokemonDataContainer = document.getElementById('pokemon-data');
-            createTable(pokemonDataContainer, parsedData);
-        })
-        .catch(error => {
-            console.error('Error fetching Pokémon data:', error);
-        });
-}
+// Fetch and display Pokémon data
+fetch('mon-data.csv')
+    .then(response => response.text())
+    .then(data => {
+        const pokemonData = Papa.parse(data, { header: true }).data;
+        const pokemonTable = createTable(pokemonData);
+        document.getElementById('pokemon-data').appendChild(pokemonTable);
+    })
+    .catch(error => {
+        console.error('Error fetching Pokémon data:', error);
+    });
 
-// Function to fetch and display Poké Ball data
-function fetchPokeballData() {
-    fetch('data/ball-data.csv') // Adjust the path to your CSV file
-        .then(response => response.text())
-        .then(data => {
-            const parsedData = Papa.parse(data, { header: true }).data;
-            const pokeballDataContainer = document.getElementById('pokeball-data');
-            createTable(pokeballDataContainer, parsedData);
-        })
-        .catch(error => {
-            console.error('Error fetching Poké Ball data:', error);
-        });
-}
+// Fetch and display Poké Ball data
+fetch('ball-data.csv')
+    .then(response => response.text())
+    .then(data => {
+        const pokeballData = Papa.parse(data, { header: true }).data;
+        const pokeballTable = createTable(pokeballData);
+        document.getElementById('pokeball-data').appendChild(pokeballTable);
+    })
+    .catch(error => {
+        console.error('Error fetching Poké Ball data:', error);
+    });
 
-// Function to create a table from parsed CSV data
-function createTable(container, data) {
+// Helper function to create a table from CSV data
+function createTable(data) {
     const table = document.createElement('table');
-    const headers = Object.keys(data[0]);
-
-    // Create table headers
-    const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    headers.forEach(header => {
+    
+    // Create table headers from the CSV column names
+    for (const column of Object.keys(data[0])) {
         const th = document.createElement('th');
-        th.textContent = header;
+        th.textContent = column;
         headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
+    }
+    
+    table.appendChild(headerRow);
 
-    // Create table rows
-    const tbody = document.createElement('tbody');
-    data.forEach(rowData => {
-        const row = document.createElement('tr');
-        headers.forEach(header => {
-            const cell = document.createElement('td');
-            cell.textContent = rowData[header];
-            row.appendChild(cell);
-        });
-        tbody.appendChild(row);
-    });
-    table.appendChild(tbody);
+    // Populate table rows with data
+    for (const row of data) {
+        const dataRow = document.createElement('tr');
+        
+        for (const column of Object.values(row)) {
+            const td = document.createElement('td');
+            td.textContent = column;
+            dataRow.appendChild(td);
+        }
+        
+        table.appendChild(dataRow);
+    }
 
-    container.appendChild(table);
+    return table;
 }
-
-// Call the functions to fetch and display data
-fetchPokemonData();
-fetchPokeballData();
