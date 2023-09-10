@@ -1,62 +1,35 @@
-// Define references to HTML elements
-const pokemonInput = document.getElementById('pokemon-input');
-const pokeballInput = document.getElementById('pokeball-input');
-const shinyToggle = document.getElementById('shiny-toggle');
-const pokemonImage = document.getElementById('pokemon-image');
-const pokeballImage = document.getElementById('pokeball-image');
-
-// Load Pokémon and Poké Ball data from CSV files
-fetch('data/mon-data.csv')
-    .then(response => response.text())
-    .then(data => {
-        const options = data.split('\n');
-        for (const option of options) {
-            const [displayName, value] = option.split(',');
-            if (displayName && value) {
-                const pokemonOption = document.createElement('option');
-                pokemonOption.textContent = displayName;
-                pokemonInput.appendChild(pokemonOption);
-            }
-        }
+// Function to load CSV data
+function loadCsvData() {
+    d3.csv('data/mon-data.csv').then(function(pokemonData) {
+        populateDatalist(pokemonData, 'mon-options');
     });
 
-fetch('data/ball-data.csv')
-    .then(response => response.text())
-    .then(data => {
-        const options = data.split('\n');
-        for (const option of options) {
-            const [displayName, value] = option.split(',');
-            if (displayName && value) {
-                const ballOption = document.createElement('option');
-                ballOption.textContent = displayName;
-                pokeballInput.appendChild(ballOption);
-            }
-        }
+    d3.csv('data/ball-data.csv').then(function(ballData) {
+        populateDatalist(ballData, 'ball-options');
     });
+}
 
-// Define Pokémon and Poké Ball image paths
-const imageBasePath = 'images';
-const monImagePath = 'mon';
-const monShinyImagePath = 'mon-shiny';
-const ballImagePath = 'ball';
+// Call the function to load data when the page loads
+loadCsvData();
 
 // Function to display selected images
 function displayImages() {
-    const selectedPokemon = pokemonInput.value.toLowerCase().replace(/\s+/g, '-');
-    const selectedPokeball = pokeballInput.value.toLowerCase().replace(/\s+/g, '-');
-    const isShiny = shinyToggle.checked;
+    const selectedPokemonDisplay = document.getElementById('mon-input').value;
+    const selectedPokeballDisplay = document.getElementById('ball-input').value;
 
-    const pokemonImageUrl = `${imageBasePath}/${isShiny ? monShinyImagePath : monImagePath}/${selectedPokemon}.png`;
-    const pokeballImageUrl = `${imageBasePath}/${ballImagePath}/${selectedPokeball}.png`;
+    const selectedPokemon = selectedPokemonDisplay.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const selectedPokeball = selectedPokeballDisplay.toLowerCase().replace(/[^a-z0-9]/g, '');
 
-    pokemonImage.src = pokemonImageUrl;
-    pokeballImage.src = pokeballImageUrl;
+    const pokemonImage = document.getElementById('pokemon-image');
+    const pokeballImage = document.getElementById('pokeball-image');
+
+    pokemonImage.src = `images/mon/${selectedPokemon}.png`;
+    pokeballImage.src = `images/ball/${selectedPokeball}.png`;
 }
 
-// Event listeners for automatic refresh
-pokemonInput.addEventListener('input', displayImages);
-pokeballInput.addEventListener('input', displayImages);
-shinyToggle.addEventListener('change', displayImages);
+// Event listener for automatic refresh
+document.getElementById('mon-input').addEventListener('input', displayImages);
+document.getElementById('ball-input').addEventListener('input', displayImages);
 
 // Initial image display
 displayImages();
