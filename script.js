@@ -38,16 +38,25 @@ async function fetchAndParseCSV(filename) {
   
 // Load and parse monOptions and ballOptions
 async function loadOptions() {
-  const monOptions = await fetchAndParseCSV("mon-data.csv");
-  const ballOptions = await fetchAndParseCSV("ball-data.csv");
+  monOptions = await fetchAndParseCSV("mon-data.csv");
+  ballOptions = await fetchAndParseCSV("ball-data.csv");
   
   // Use the loaded options
   console.log("monOptions:", monOptions);
   console.log("ballOptions:", ballOptions);
   
   // Populate datalists with options (you can call populateDatalist here)
-}
+  populateDatalist(monDatalist, monOptions);
+  populateDatalist(ballDatalist, ballOptions);
+
+  // Initialize the monImageFolder based on the initial switch state
+  monImageFolder = modeSwitch.checked ? "images/mon-shiny" : "images/mon";
   
+  // Initialize the images src
+  updateMonImage();
+  updateBallImage();
+}
+
 // Call loadOptions to load the CSV data and populate datalists
 loadOptions();
 
@@ -60,10 +69,6 @@ function populateDatalist(datalist, options) {
     datalist.appendChild(optionElement);
   });
 }
-  
-// Initial population of datalists
-populateDatalist(monDatalist, monOptions);
-populateDatalist(ballDatalist, ballOptions);
   
 // Event listener for the filter inputs
 monInput.addEventListener("input", function () {
