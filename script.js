@@ -95,14 +95,10 @@ ballInput.addEventListener("input", function () {
 // Event listener to clear input fields when they are clicked
 monInput.addEventListener("focus", function () {
   this.value = ""; // Clear the input field
-  monIdentifier = ""; // Clear the identifier as well
-  updateMonImage();
 });
   
 ballInput.addEventListener("focus", function () {
   this.value = ""; // Clear the input field
-  ballIdentifier = ""; // Clear the identifier as well
-  updateBallImage();
 });
 
 monDatalist.addEventListener("change", function () {
