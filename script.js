@@ -96,13 +96,13 @@ ballInput.addEventListener("input", function () {
 monInput.addEventListener("focus", function () {
   this.value = ""; // Clear the input field
   monIdentifier = ""; // Clear the identifier as well
-  monImage.src = ""; // Clear the image
+  updateMonImage();
 });
   
 ballInput.addEventListener("focus", function () {
   this.value = ""; // Clear the input field
   ballIdentifier = ""; // Clear the identifier as well
-  ballImage.src = ""; // Clear the image
+  updateBallImage();
 });
 
 monDatalist.addEventListener("change", function () {
