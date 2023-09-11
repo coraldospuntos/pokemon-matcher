@@ -83,15 +83,23 @@ ballInput.addEventListener("input", function () {
   updateBallImage();
 });
 
-// Event listener to clear input fields when they are clicked
-monInput.addEventListener("focus", function () {
-    this.value = ""; // Clear the input field
+// Event listener for the datalists
+monDatalist.addEventListener("change", function () {
+    const selectedOption = this.options[this.selectedIndex];
+    if (selectedOption) {
+      monIdentifier = selectedOption.value;
+      updateMonImage();
+    }
   });
   
-  ballInput.addEventListener("focus", function () {
-    this.value = ""; // Clear the input field
+  ballDatalist.addEventListener("change", function () {
+    const selectedOption = this.options[this.selectedIndex];
+    if (selectedOption) {
+      ballIdentifier = selectedOption.value;
+      updateBallImage();
+    }
   });
-
+  
 // Function to update the mon-image src
 function updateMonImage() {
     const monImagePath = monImageFolder + "/" + monIdentifier + ".png";
