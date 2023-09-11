@@ -108,15 +108,6 @@ ballDatalist.addEventListener("change", function () {
   }
 });
 
-// Event listener to clear input fields when they are clicked
-monInput.addEventListener("focus", function () {
-  this.value = ""; // Clear the input field
-});
-  
-ballInput.addEventListener("focus", function () {
-  this.value = ""; // Clear the input field
-});
-
 function updateMonImage() {
   const monImagePath = monImageFolder + "/" + monIdentifier + ".png";
   const img = new Image();
