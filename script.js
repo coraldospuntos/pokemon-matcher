@@ -24,7 +24,7 @@ async function fetchAndParseCSV(filename) {
     const rows = csvData.split("\n");
   
     // Extract data from CSV (assuming the second column contains the options)
-    const options = rows.map(row => row.split(",")[1].trim());
+    const options = rows.map(row => row.split(";")[0].trim());
     options.shift(); // Remove the header row
 
     return options;
