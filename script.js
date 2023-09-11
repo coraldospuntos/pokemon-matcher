@@ -7,13 +7,47 @@ let monImageFolder;
 let monIdentifier = "1";
 let ballIdentifier = "poke";
 
-const monOptions = ["1", "2", "3", "3-m", "25", "25-m", "26", "26-m", "10100"];
-const ballOptions = ["poke", "great", "ultra", "master", "safari"];
-
 const monInput = document.getElementById("mon-input");
 const ballInput = document.getElementById("ball-input");
 const monDatalist = document.getElementById("mon-options");
 const ballDatalist = document.getElementById("ball-options");
+
+// Function to fetch and parse CSV data
+async function fetchAndParseCSV(filename) {
+  try {
+    const response = await fetch(`data/${filename}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${filename}`);
+    }
+  
+    const csvData = await response.text();
+    const rows = csvData.split("\n");
+  
+    // Extract data from CSV (assuming the second column contains the options)
+    const options = rows.map(row => row.split(",")[1].trim());
+    options.shift(); // Remove the header row
+
+    return options;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+  
+// Load and parse monOptions and ballOptions
+async function loadOptions() {
+  const monOptions = await fetchAndParseCSV("mon-data.csv");
+  const ballOptions = await fetchAndParseCSV("ball-data.csv");
+  
+  // Use the loaded options
+  console.log("monOptions:", monOptions);
+  console.log("ballOptions:", ballOptions);
+  
+  // Populate datalists with options (you can call populateDatalist here)
+}
+  
+// Call loadOptions to load the CSV data and populate datalists
+loadOptions();
 
 // Function to populate a datalist with options
 function populateDatalist(datalist, options) {
