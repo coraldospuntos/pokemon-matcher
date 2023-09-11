@@ -92,15 +92,6 @@ ballInput.addEventListener("input", function () {
   }
 });
 
-// Event listener to clear input fields when they are clicked
-monInput.addEventListener("focus", function () {
-  this.value = ""; // Clear the input field
-});
-  
-ballInput.addEventListener("focus", function () {
-  this.value = ""; // Clear the input field
-});
-
 monDatalist.addEventListener("change", function () {
   const selectedOption = this.value;
   if (monNameToIdentifier[selectedOption]) {
@@ -115,6 +106,15 @@ ballDatalist.addEventListener("change", function () {
     ballIdentifier = ballNameToIdentifier[selectedOption];
     updateBallImage();
   }
+});
+
+// Event listener to clear input fields when they are clicked
+monInput.addEventListener("focus", function () {
+  this.value = ""; // Clear the input field
+});
+  
+ballInput.addEventListener("focus", function () {
+  this.value = ""; // Clear the input field
 });
 
 function updateMonImage() {
