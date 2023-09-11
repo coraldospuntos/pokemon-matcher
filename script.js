@@ -8,13 +8,16 @@ let monIdentifier = "1";
 let ballIdentifier = "poke";
 let monOptions = [];
 let ballOptions = [];
-
 const monInput = document.getElementById("mon-input");
 const ballInput = document.getElementById("ball-input");
 const monDatalist = document.getElementById("mon-options");
 const ballDatalist = document.getElementById("ball-options");
 
-async function fetchAndParseCSV(filename) {
+// Create mappings for user-friendly names to identifiers
+const monNameToIdentifier = {};
+const ballNameToIdentifier = {};
+
+async function fetchAndParseCSV(filename, nameToIdentifierMap) {
   try {
     const response = await fetch(`data/${filename}`);
     if (!response.ok) {
@@ -24,10 +27,16 @@ async function fetchAndParseCSV(filename) {
     const csvData = await response.text();
     const rows = csvData.split("\n");
 
-    // Extract data from CSV (assuming the first column contains the options)
+    // Extract data from CSV (assuming the first column contains names and the second column contains identifiers)
     const options = rows
-      .slice(1) // Exclude the header row
-      .map(row => row.split(";")[0].trim()); // Swap to [0] for Name column
+      .slice(1) // Excludes 1st row
+      .map(row => {
+        const [name, identifier] = row.split(";");
+        const trimmedName = name.trim();
+        const trimmedIdentifier = identifier.trim();
+        nameToIdentifierMap[trimmedName] = trimmedIdentifier;
+        return trimmedName;
+      });
 
     return options;
   } catch (error) {
@@ -36,10 +45,9 @@ async function fetchAndParseCSV(filename) {
   }
 }
 
-// Load and parse monOptions and ballOptions separately
 async function loadOptions() {
-  monOptions = await fetchAndParseCSV("mon-data.csv");
-  ballOptions = await fetchAndParseCSV("ball-data.csv");
+  monOptions = await fetchAndParseCSV("mon-data.csv", monNameToIdentifier);
+  ballOptions = await fetchAndParseCSV("ball-data.csv", ballNameToIdentifier);
 
   // Use the loaded options
   console.log("monOptions:", monOptions);
@@ -57,10 +65,8 @@ async function loadOptions() {
   updateBallImage();
 }
 
-// Call loadOptions to load the CSV data and populate datalists
 loadOptions();
 
-// Function to populate a datalist with options
 function populateDatalist(datalist, options) {
   datalist.innerHTML = "";
   options.forEach(option => {
@@ -70,77 +76,77 @@ function populateDatalist(datalist, options) {
   });
 }
 
-// Event listener for the filter inputs
 monInput.addEventListener("input", function () {
   const searchTerm = this.value;
-  monIdentifier = searchTerm;
-  updateMonImage();
+  if (monNameToIdentifier[searchTerm]) {
+    monIdentifier = monNameToIdentifier[searchTerm];
+    updateMonImage();
+  }
 });
 
 ballInput.addEventListener("input", function () {
   const searchTerm = this.value;
-  ballIdentifier = searchTerm;
-  updateBallImage();
+  if (ballNameToIdentifier[searchTerm]) {
+    ballIdentifier = ballNameToIdentifier[searchTerm];
+    updateBallImage();
+  }
 });
 
 monDatalist.addEventListener("change", function () {
   const selectedOption = this.value;
-  monIdentifier = selectedOption;
-  updateMonImage();
+  if (monNameToIdentifier[selectedOption]) {
+    monIdentifier = monNameToIdentifier[selectedOption];
+    updateMonImage();
+  }
 });
 
 ballDatalist.addEventListener("change", function () {
   const selectedOption = this.value;
-  ballIdentifier = selectedOption;
-  updateBallImage();
+  if (ballNameToIdentifier[selectedOption]) {
+    ballIdentifier = ballNameToIdentifier[selectedOption];
+    updateBallImage();
+  }
 });
 
-// Function to update the mon-image src
 function updateMonImage() {
   const monImagePath = monImageFolder + "/" + monIdentifier + ".png";
   const img = new Image();
   img.src = monImagePath;
-  img.onload = function() {
+  img.onload = function () {
     monImage.src = monImagePath;
   };
-  img.onerror = function() {
+  img.onerror = function () {
     monImage.src = monImageFolder + "/" + monImage.src.split("/").pop();
   };
 }
 
-// Function to update the ball-image src
 function updateBallImage() {
   const ballImagePath = "images/ball/" + ballIdentifier + ".png";
   const img = new Image();
   img.src = ballImagePath;
-  img.onload = function() {
+  img.onload = function () {
     ballImage.src = ballImagePath;
   };
-  img.onerror = function() {
+  img.onerror = function () {
     ballImage.src = "images/ball/" + ballImage.src.split("/").pop();
   };
 }
 
-// Initialize the monImageFolder based on the initial switch state
 monImageFolder = modeSwitch.checked ? "images/mon-shiny" : "images/mon";
 
-// Initialize the images src
 updateMonImage();
 updateBallImage();
 
-modeSwitch.addEventListener('change', function() {
+modeSwitch.addEventListener('change', function () {
   if (this.checked) {
-    // Switch is ON (shiny mode)
     body.style.backgroundColor = 'var(--black-color)';
     body.style.color = 'var(--white-color)';
     monImageFolder = "images/mon-shiny";
   } else {
-    // Switch is OFF (normal mode)
     body.style.backgroundColor = 'var(--white-color)';
     body.style.color = 'var(--black-color)';
     monImageFolder = "images/mon";
   }
 
-  // Update the mon-image src based on the mode switch state
   updateMonImage();
 });
