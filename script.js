@@ -92,6 +92,19 @@ ballInput.addEventListener("input", function () {
   }
 });
 
+// Event listener to clear input fields when they are clicked
+monInput.addEventListener("focus", function () {
+  this.value = ""; // Clear the input field
+  monIdentifier = ""; // Clear the identifier as well
+  monImage.src = ""; // Clear the image
+});
+  
+ballInput.addEventListener("focus", function () {
+  this.value = ""; // Clear the input field
+  ballIdentifier = ""; // Clear the identifier as well
+  ballImage.src = ""; // Clear the image
+});
+
 monDatalist.addEventListener("change", function () {
   const selectedOption = this.value;
   if (monNameToIdentifier[selectedOption]) {
@@ -107,20 +120,6 @@ ballDatalist.addEventListener("change", function () {
     updateBallImage();
   }
 });
-
-// Event listener to clear input fields when they are clicked
-monInput.addEventListener("focus", function () {
-  this.value = ""; // Clear the input field
-  monIdentifier = ""; // Clear the identifier as well
-  monImage.src = ""; // Clear the image
-});
-  
-ballInput.addEventListener("focus", function () {
-  this.value = ""; // Clear the input field
-  ballIdentifier = ""; // Clear the identifier as well
-  ballImage.src = ""; // Clear the image
-});
-  
 
 function updateMonImage() {
   const monImagePath = monImageFolder + "/" + monIdentifier + ".png";
