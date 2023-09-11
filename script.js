@@ -6,6 +6,8 @@ const ballImage = document.querySelector('.ball-image');
 let monImageFolder;
 let monIdentifier = "1";
 let ballIdentifier = "poke";
+let monOptions = []; // Declare at the top level
+let ballOptions = []; // Declare at the top level
 
 const monInput = document.getElementById("mon-input");
 const ballInput = document.getElementById("ball-input");
