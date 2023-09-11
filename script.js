@@ -108,6 +108,20 @@ ballDatalist.addEventListener("change", function () {
   }
 });
 
+// Event listener to clear input fields when they are clicked
+monInput.addEventListener("focus", function () {
+  this.value = ""; // Clear the input field
+  monIdentifier = ""; // Clear the identifier as well
+  monImage.src = ""; // Clear the image
+});
+  
+ballInput.addEventListener("focus", function () {
+  this.value = ""; // Clear the input field
+  ballIdentifier = ""; // Clear the identifier as well
+  ballImage.src = ""; // Clear the image
+});
+  
+
 function updateMonImage() {
   const monImagePath = monImageFolder + "/" + monIdentifier + ".png";
   const img = new Image();
@@ -116,7 +130,8 @@ function updateMonImage() {
     monImage.src = monImagePath;
   };
   img.onerror = function () {
-    monImage.src = monImageFolder + "/" + monImage.src.split("/").pop();
+    // Use the previous image source
+    monImage.src = monImageFolder + "/" + monIdentifier + ".png";
   };
 }
 
@@ -128,7 +143,8 @@ function updateBallImage() {
     ballImage.src = ballImagePath;
   };
   img.onerror = function () {
-    ballImage.src = "images/ball/" + ballImage.src.split("/").pop();
+    // Use the previous image source
+    ballImage.src = "images/ball/" + ballIdentifier + ".png";
   };
 }
 
