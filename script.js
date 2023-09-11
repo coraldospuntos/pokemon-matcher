@@ -12,27 +12,27 @@ const ballInput = document.getElementById("ball-input");
 const monDatalist = document.getElementById("mon-options");
 const ballDatalist = document.getElementById("ball-options");
 
-// Function to fetch and parse CSV data
 async function fetchAndParseCSV(filename) {
-  try {
-    const response = await fetch(`data/${filename}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch ${filename}`);
+    try {
+      const response = await fetch(`data/${filename}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${filename}`);
+      }
+  
+      const csvData = await response.text();
+      const rows = csvData.split("\n");
+  
+      // Extract data from CSV (assuming the second column contains the options)
+      const options = rows
+        .map(row => row.split(";")[0].trim()) // Swap to [0] for Name column
+        .filter(option => option !== "Identifier"); // Remove the header row
+  
+      return options;
+    } catch (error) {
+      console.error(error);
+      return [];
     }
-  
-    const csvData = await response.text();
-    const rows = csvData.split("\n");
-  
-    // Extract data from CSV (assuming the second column contains the options)
-    const options = rows.map(row => row.split(";")[0].trim());
-    options.shift(); // Remove the header row
-
-    return options;
-  } catch (error) {
-    console.error(error);
-    return [];
   }
-}
   
 // Load and parse monOptions and ballOptions
 async function loadOptions() {
