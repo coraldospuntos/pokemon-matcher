@@ -79,6 +79,8 @@ input:checked + .slider:before {
 
 .dropdown-container {
     margin: 10px 0;
+    justify-self: center;
+    align-items: center;
   }
   
   input[type="text"] {
