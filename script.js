@@ -57,8 +57,6 @@ async function loadOptions() {
   populateDatalist(monDatalist, monOptions);
   populateDatalist(ballDatalist, ballOptions);
 
-  // Initialize the monImageFolder based on the initial switch state
-//  monImageFolder = modeSwitch.checked ? "images/mon-shiny" : "images/mon";
   monImageFolder = "images/mon";
 
   // Initialize the images src
@@ -135,21 +133,5 @@ function updateBallImage() {
   };
 }
 
-//monImageFolder = modeSwitch.checked ? "images/mon-shiny" : "images/mon";
-
 updateMonImage();
 updateBallImage();
-
-//modeSwitch.addEventListener('change', function () {
-//  if (this.checked) {
-//    body.style.backgroundColor = 'var(--black-color)';
-//    body.style.color = 'var(--white-color)';
-//    monImageFolder = "images/mon-shiny";
-//  } else {
-//    body.style.backgroundColor = 'var(--white-color)';
-//    body.style.color = 'var(--black-color)';
-//    monImageFolder = "images/mon";
-//  }
-//
-//  updateMonImage();
-//});
